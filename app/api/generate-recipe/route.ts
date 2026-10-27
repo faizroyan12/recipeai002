@@ -15,27 +15,9 @@ export async function POST(req: Request) {
       );
     }
 
-    // 1. Ambil daftar model yang bisa diakses oleh API Key kamu
-    const modelList = await groq.models.list();
-    const availableModels = modelList.data.map((m) => m.id);
-
-    console.log('--- MODEL YANG TERSEDIA DI AKUN KAMU ---');
-    console.log(availableModels);
-    console.log('---------------------------------------');
-
-    if (availableModels.length === 0) {
-      return NextResponse.json(
-        { error: 'Tidak ada model Groq yang tersedia untuk API Key ini.' },
-        { status: 500 }
-      );
-    }
-
-    // 2. Pilih model pertama yang tersedia
-    const selectedModel = availableModels[0];
-    console.log(`Menggunakan model: ${selectedModel}`);
-
     const promptText = `Bahan: ${ingredients}. Kategori: ${filter || 'Semua'}. Buatkan 2 resep ringkas.`;
 
+    // Gunakan model chat teks resmi Groq secara eksplisit
     const completion = await groq.chat.completions.create({
       messages: [
         {
@@ -48,7 +30,7 @@ export async function POST(req: Request) {
           content: promptText,
         },
       ],
-      model: selectedModel,
+      model: 'llama-3.3-70b-versatile',
       response_format: { type: 'json_object' },
     });
 
