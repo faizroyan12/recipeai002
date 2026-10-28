@@ -38,7 +38,7 @@ PENTING: Kembalikan HANYA format JSON valid tanpa teks lain di luar JSON dengan 
           content: promptMessage,
         },
       ],
-      model: 'llama3-70b-8192', // Menggunakan model universal yang stabil
+      model: 'openai/gpt-oss-20b', // Menggunakan model aktif dan stabil saat ini
     });
 
     let rawText = completion.choices[0]?.message?.content || '{}';
