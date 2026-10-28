@@ -1,4 +1,4 @@
-'type client';
+'use client';
 import { useState } from 'react';
 
 interface Recipe {
