@@ -17,7 +17,6 @@ export async function POST(req: Request) {
 
     const promptText = `Bahan: ${ingredients}. Kategori: ${filter || 'Semua'}. Buatkan 2 resep ringkas.`;
 
-    // Gunakan model chat teks resmi Groq secara eksplisit
     const completion = await groq.chat.completions.create({
       messages: [
         {
@@ -30,7 +29,7 @@ export async function POST(req: Request) {
           content: promptText,
         },
       ],
-      model: 'llama-3.3-70b-versatile',
+      model: 'llama3-8b-8192', // Menggunakan model standar yang didukung semua akun Groq
       response_format: { type: 'json_object' },
     });
 
