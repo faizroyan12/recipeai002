@@ -15,6 +15,15 @@ export async function POST(req: Request) {
       );
     }
 
+    // Ambil daftar model yang tersedia di akun Groq kamu secara otomatis
+    const modelList = await groq.models.list();
+    // Cari model teks (mengandung kata 'llama' atau 'mixtral' atau 'gemma', dan bukan 'whisper')
+    const textModel = modelList.data.find(
+      (m) => (m.id.includes('llama') || m.id.includes('mixtral') || m.id.includes('gemma')) && !m.id.includes('whisper')
+    );
+
+    const selectedModel = textModel ? textModel.id : 'llama-3.1-8b-instant';
+
     const promptText = `Bahan: ${ingredients}. Kategori: ${filter || 'Semua'}. Buatkan 2 resep ringkas.`;
 
     const completion = await groq.chat.completions.create({
@@ -29,7 +38,7 @@ export async function POST(req: Request) {
           content: promptText,
         },
       ],
-      model: 'openai/gpt-oss-20b',
+      model: selectedModel,
       response_format: { type: 'json_object' },
     });
 
