@@ -15,31 +15,31 @@ export async function POST(req: Request) {
       );
     }
 
-    // Ambil daftar model yang tersedia di akun Groq kamu secara otomatis
-    const modelList = await groq.models.list();
-    // Cari model teks (mengandung kata 'llama' atau 'mixtral' atau 'gemma', dan bukan 'whisper')
-    const textModel = modelList.data.find(
-      (m) => (m.id.includes('llama') || m.id.includes('mixtral') || m.id.includes('gemma')) && !m.id.includes('whisper')
-    );
+    // Gabungkan instruksi system dan user menjadi satu pesan agar aman dari error klasifikasi
+    const promptMessage = `Kamu adalah chef profesional. Buatkan 2 resep ringkas berdasarkan:
+Bahan: ${ingredients}
+Kategori: ${filter || 'Semua'}
 
-    const selectedModel = textModel ? textModel.id : 'llama-3.1-8b-instant';
-
-    const promptText = `Bahan: ${ingredients}. Kategori: ${filter || 'Semua'}. Buatkan 2 resep ringkas.`;
+PENTING: Kembalikan HANYA format JSON valid tanpa teks lain di luar JSON dengan struktur wajib berikut:
+{
+  "recipes": [
+    {
+      "title": "Nama Resep",
+      "time": "30 menit",
+      "ingredients": ["bahan 1", "bahan 2"],
+      "steps": ["langkah 1", "langkah 2"]
+    }
+  ]
+}`;
 
     const completion = await groq.chat.completions.create({
       messages: [
         {
-          role: 'system',
-          content:
-            'Kamu adalah chef profesional. Kembalikan HANYA format JSON valid. Struktur wajib: {"recipes": [{"title": "Nama Resep", "time": "30 menit", "ingredients": ["bahan 1"], "steps": ["langkah 1"]}]}',
-        },
-        {
           role: 'user',
-          content: promptText,
+          content: promptMessage,
         },
       ],
-      model: selectedModel,
-      response_format: { type: 'json_object' },
+      model: 'llama-3.1-8b-instant', // Gunakan model default standar
     });
 
     let rawText = completion.choices[0]?.message?.content || '{}';
