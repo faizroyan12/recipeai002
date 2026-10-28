@@ -15,18 +15,24 @@ export async function POST(req: Request) {
       );
     }
 
-    const promptMessage = `Kamu adalah chef profesional. Buatkan 2 resep ringkas berdasarkan:
+    // Prompt diperbarui agar langkah-langkah memasaknya lebih detail dan instruktif
+    const promptMessage = `Kamu adalah chef profesional yang sangat detail mengajari pemula. Buatkan 2 resep lezat berdasarkan:
 Bahan: ${ingredients}
 Kategori: ${filter || 'Semua'}
 
-PENTING: Kembalikan HANYA format JSON valid tanpa teks lain di luar JSON dengan struktur wajib berikut:
+PENTING: 
+1. Bagian langkah-langkah (steps) harus dibuat SANGAT DETAIL, jelas, dan tidak boleh terlalu ringkas. Berikan panduan lengkap seperti besar api (kecil/sedang), tekstur atau aroma sebagai tanda matang, dan tips tambahan agar masakan enak.
+2. Kembalikan HANYA format JSON valid tanpa teks lain di luar JSON dengan struktur wajib berikut:
 {
   "recipes": [
     {
       "title": "Nama Resep",
       "time": "30 menit",
-      "ingredients": ["bahan 1", "bahan 2"],
-      "steps": ["langkah 1", "langkah 2"]
+      "ingredients": ["bahan 1 dengan takaran", "bahan 2 dengan takaran"],
+      "steps": [
+        "Langkah 1 yang dijelaskan secara detail dan panjang...",
+        "Langkah 2 yang dijelaskan secara detail dan panjang..."
+      ]
     }
   ]
 }`;
@@ -38,7 +44,7 @@ PENTING: Kembalikan HANYA format JSON valid tanpa teks lain di luar JSON dengan 
           content: promptMessage,
         },
       ],
-      model: 'openai/gpt-oss-20b', // Menggunakan model aktif dan stabil saat ini
+      model: 'openai/gpt-oss-120b', // Menggunakan model aktif yang stabil
     });
 
     let rawText = completion.choices[0]?.message?.content || '{}';
