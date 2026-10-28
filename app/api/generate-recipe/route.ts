@@ -29,7 +29,7 @@ export async function POST(req: Request) {
           content: promptText,
         },
       ],
-      model: 'llama-3.1-8b-instant',
+      model: 'openai/gpt-oss-20b',
       response_format: { type: 'json_object' },
     });
 
