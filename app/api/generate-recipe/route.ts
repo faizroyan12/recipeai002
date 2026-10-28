@@ -29,7 +29,7 @@ export async function POST(req: Request) {
           content: promptText,
         },
       ],
-      model: 'llama-3.1-8b-instant', // Menggunakan model aktif terbaru dari Groq
+      model: 'llama-3.1-8b-instant',
       response_format: { type: 'json_object' },
     });
 
