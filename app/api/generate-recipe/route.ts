@@ -15,7 +15,6 @@ export async function POST(req: Request) {
       );
     }
 
-    // Gabungkan instruksi system dan user menjadi satu pesan agar aman dari error klasifikasi
     const promptMessage = `Kamu adalah chef profesional. Buatkan 2 resep ringkas berdasarkan:
 Bahan: ${ingredients}
 Kategori: ${filter || 'Semua'}
@@ -39,7 +38,7 @@ PENTING: Kembalikan HANYA format JSON valid tanpa teks lain di luar JSON dengan 
           content: promptMessage,
         },
       ],
-      model: 'llama-3.1-8b-instant', // Gunakan model default standar
+      model: 'llama3-70b-8192', // Menggunakan model universal yang stabil
     });
 
     let rawText = completion.choices[0]?.message?.content || '{}';
